@@ -39,8 +39,8 @@ type candle struct {
 
 // key is a structure of index key for data manipulation.
 type key struct {
-	tiker string
-	tme   time.Time
+	tiker      string
+	candleTime time.Time
 }
 
 // cndls is a sclice for use by Sort interface.
@@ -74,10 +74,10 @@ func main() {
 	// solution
 	intervals := []int{min1, min2, min5}
 
-	for _, intervl := range intervals {
+	for _, interval := range intervals {
 		index := make(map[key][]int, 0)
 		for _, price := range prices {
-			k := key{tiker: price.tiker, tme: price.priceTime.Truncate(time.Duration(intervl) * time.Minute)}
+			k := key{tiker: price.tiker, candleTime: price.priceTime.Truncate(time.Duration(interval) * time.Minute)}
 			_, ok := index[k]
 			if !ok {
 				index[k] = []int{price.price}
@@ -94,8 +94,8 @@ func main() {
 				max:        max,
 				min:        min,
 				close:      v[len(v)-1],
-				candleTime: k.tme,
-				interval:   intervl,
+				candleTime: k.candleTime,
+				interval:   interval,
 			}
 			candles = append(candles, c)
 		}
@@ -116,9 +116,9 @@ func main() {
 
 // ToCSV prepare candle data to CSV output.
 func (c *candle) ToCSV() []string {
-	candleCSV := make([]string, 4)
+	candleCSV := make([]string, 4) // output fields: tiker, (open, high, low, close), candle time, candle interval
 	candleCSV[0] = c.tiker
-	candleCSV[1] = fmt.Sprintf("%2.2f,%2.2f,%2.2f,%2.2f", float64(c.open)/100, float64(c.max)/100, float64(c.min)/100, float64(c.close)/100) //strings.Join(c.open, ",")
+	candleCSV[1] = fmt.Sprintf("%2.2f,%2.2f,%2.2f,%2.2f", float64(c.open)/100, float64(c.max)/100, float64(c.min)/100, float64(c.close)/100) //strings.Join(c.open, ",") // open, high, low, close
 	candleCSV[2] = c.candleTime.Format(time.RFC3339)
 	candleCSV[3] = fmt.Sprint(strconv.Itoa(c.interval), "min")
 	return candleCSV
