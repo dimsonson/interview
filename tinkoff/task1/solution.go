@@ -120,7 +120,7 @@ func (c *candle) ToCSV() []string {
 	candleCSV[0] = c.tiker
 	candleCSV[1] = fmt.Sprintf("%2.2f,%2.2f,%2.2f,%2.2f", float64(c.open)/100, float64(c.max)/100, float64(c.min)/100, float64(c.close)/100) //strings.Join(c.open, ",") // open, high, low, close
 	candleCSV[2] = c.candleTime.Format(time.RFC3339)
-	candleCSV[3] = fmt.Sprint(strconv.Itoa(c.interval), "min")
+	candleCSV[3] = fmt.Sprint(c.interval, "min")
 	return candleCSV
 }
 
